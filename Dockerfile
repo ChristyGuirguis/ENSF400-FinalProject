@@ -1,15 +1,14 @@
-#linux-based jdk 11 image
-FROM openjdk:11-jdk-slim
+# Use the official Tomcat image
+FROM tomcat:9.0
 
-WORKDIR /app
+# Set working directory
+WORKDIR /usr/local/tomcat/webapps/
 
-COPY . .
+# Copy the WAR file to the Tomcat webapps directory
+COPY build/libs/ENSF400-FinalProject-1.0.0.war ROOT.war
 
-RUN chmod +x gradlew
-
-ENV PORT=8080
-
+# Expose port 8080 for Tomcat
 EXPOSE 8080
 
-# Run app and keep it running
-CMD ["./gradlew", "appRun"]
+# Start Tomcat
+CMD ["catalina.sh", "run"]
