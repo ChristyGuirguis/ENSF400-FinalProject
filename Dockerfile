@@ -1,14 +1,25 @@
-# Use the official Tomcat image
-FROM tomcat:9.0
+# Stage 1: Build the application
+FROM gradle:7.3.3-jdk11 AS builder
+WORKDIR /desktop_app
 
-# Set working directory
-WORKDIR /usr/local/tomcat/webapps/
+# Copy both the gradlew and other project files
+COPY gradlew . 
+COPY . .
 
-# Copy the WAR file to the Tomcat webapps directory
-COPY build/libs/ENSF400-FinalProject-1.0.0.war ROOT.war
+# Set the correct permissions on the gradlew script
+RUN chmod +x gradlew
 
-# Expose port 8080 for Tomcat
+# Build the application
+RUN ./gradlew clean build --no-daemon
+
+# Stage 2: Set up the runtime image
+FROM openjdk:11-jre-slim
+
+# Copy the built JAR file from the builder stage
+COPY --from=builder /desktop_app/build/libs/*.jar app.jar
+
+# Expose port 8080
 EXPOSE 8080
 
-# Start Tomcat
-CMD ["catalina.sh", "run"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
