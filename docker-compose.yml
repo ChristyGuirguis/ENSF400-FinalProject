@@ -7,7 +7,7 @@ services:
       - "8080:8080"
     depends_on:
       - db
-
+#usage for database
   db:
     image: postgres:13
     environment:
