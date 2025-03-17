@@ -1,12 +1,13 @@
 version: '3'
 services:
   web:
-    image: image-name
+    image: docker-compose
     build: .
     ports:
       - "8080:8080"
     depends_on:
       - db
+      - src
 
   db:
     image: postgres:13
@@ -16,3 +17,4 @@ services:
       POSTGRES_DB: mydb
     ports:
       - "8080:8080"
+      - "5000"
