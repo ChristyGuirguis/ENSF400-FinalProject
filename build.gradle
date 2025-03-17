@@ -13,6 +13,8 @@ buildscript {
 plugins {
     id 'war'
 
+    //Madiha comment: war file detected here
+
     // gretty is a gradle plugin to make it easy to run a server and hotswap code at runtime.
     // https://plugins.gradle.org/plugin/org.gretty
     id 'org.gretty' version '3.0.6'
@@ -632,6 +634,7 @@ dependencyCheckAnalyze.finalizedBy 'printReportPathsDependencyCheck'
 // ORG_GRADLE_PROJECT_deploy_directory="C:/Users/byron/Desktop/test_tools/tomcat-9/webapps"
 task deployToTestWindowsLocal(type: Copy) {
     dependsOn war
+    //depends on war files, use this for docker file build/run
 
     if (project.hasProperty('deploy_directory')) {
         from("$buildDir/libs/") {
