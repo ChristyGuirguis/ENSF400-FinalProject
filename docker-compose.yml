@@ -1,0 +1,18 @@
+version: '3'
+services:
+  web:
+    image: image-name
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "8080:8080"
