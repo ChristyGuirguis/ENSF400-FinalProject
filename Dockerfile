@@ -7,8 +7,11 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
-# Build Gradle
-RUN gradle build
+# Build Gradle (using the wrapper)
+RUN chmod +x gradlew && ./gradlew build
+
+# Verify that the WAR file was generated
+RUN ls -la /app/build/libs/
 
 # Use the official Tomcat image for deployment
 FROM tomcat:9.0
@@ -17,7 +20,7 @@ FROM tomcat:9.0
 WORKDIR /usr/local/tomcat/webapps/
 
 # Copy the built WAR file from the Gradle build stage
-COPY --from=build /app/build/libs/ENSF400-FinalProject-1.0.0.war ROOT.war
+COPY --from=build /app/build/libs/*.war ROOT.war
 
 # Expose port 8080 for Tomcat
 EXPOSE 8080
