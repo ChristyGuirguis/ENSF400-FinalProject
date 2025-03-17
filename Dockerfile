@@ -1,28 +1,26 @@
-# Stage 1: Build the application with Gradle
-FROM gradle:7.3.3-jdk11 AS builder
+# Gradle 7.6 and JDK 11 image
+FROM gradle:7.6.1-jdk11 AS build
 
-# Set working directory for the project
+# Set working directory
 WORKDIR /app
 
-# Copy the Gradle wrapper and project files
-COPY gradlew . 
-COPY build.gradle . 
-COPY src ./src
+# Copy project files
+COPY . .
 
-# Set the correct permissions on the gradlew script
-RUN chmod +x ./gradlew
+# Build Gradle (using the wrapper)
+RUN chmod +x gradlew && ./gradlew build
 
-# Build the WAR file using Gradle
-RUN ./gradlew clean build --no-daemon
+# Verify that the WAR file was generated
+RUN ls -la /app/build/libs/
 
-# Stage 2: Set up the runtime image with Tomcat
+# Use the official Tomcat image for deployment
 FROM tomcat:9.0
 
-# Set working directory in Tomcat's webapps folder
+# Set working directory
 WORKDIR /usr/local/tomcat/webapps/
 
-# Copy the built WAR file from the builder stage to Tomcat's webapps folder
-COPY --from=builder /app/build/libs/ENSF400-FinalProject-1.0.0.war ROOT.war
+# Copy the built WAR file from the Gradle build stage
+COPY --from=build /app/build/libs/*.war ROOT.war
 
 # Expose port 8080 for Tomcat
 EXPOSE 8080
