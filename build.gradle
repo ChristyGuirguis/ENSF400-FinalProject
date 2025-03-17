@@ -432,6 +432,7 @@ void waitForHeartbeat() {
             sleep 2
             // ignored.
             //throw new Exception(ignored.getMessage())
+            //azlfa's comment: The exception is ignored when the server fails to connect and then waits 2 seconds before sleeping.
         }
     }
 }
@@ -450,11 +451,14 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
+    //Define the URL for the SONAR Qube API
     URL url = new URL("http://localhost:9000/api/qualitygates/project_status?projectKey=Demo")
+    //starts a HTTP connection
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
     connection.connect()
     int code = connection.getResponseCode()
+    //azlfas comment: Read the response from the API.
     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))
     String strCurrentLine
     while ((strCurrentLine = br.readLine()) != null) {
@@ -464,6 +468,7 @@ static void isQualityGateGood() {
             throw new GradleException("The quality gate for Demo on Sonarqube failed.  Check Sonarqube.")
         }
     }
+    //azlfas comment: Throw a GradleException if the code does not equal to 200.
     if (code != 200) {
         throw new GradleException("response from Sonar was " + code)
     }
