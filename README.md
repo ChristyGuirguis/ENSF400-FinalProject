@@ -6,6 +6,8 @@ documentation_ ... but that doesn't mean we can't have pretty good documentation
 
 #### Quick Start:
 
+Change to test automated pr build
+
 * Install [Java](https://www.java.com/en/download/) if you don't already have it.
 * Clone or [download](https://github.com/7ep/demo/archive/master.zip) this repo.  (if you download, unzip the file to a directory.)
 * On the command line in the top directory of this repo, run `gradlew apprun`
